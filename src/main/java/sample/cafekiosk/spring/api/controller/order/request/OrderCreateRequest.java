@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import sample.cafekiosk.spring.api.service.order.request.OrderCreateServiceRequest;
 
 import java.util.List;
 
@@ -17,5 +18,11 @@ public class OrderCreateRequest {
     @Builder
     private OrderCreateRequest(List<String> productNumbers) {
         this.productNumbers = productNumbers;
+    }
+
+    public OrderCreateServiceRequest toServiceRequest() {
+        return OrderCreateServiceRequest.builder()
+                .productNumbers(productNumbers)
+                .build();
     }
 }
