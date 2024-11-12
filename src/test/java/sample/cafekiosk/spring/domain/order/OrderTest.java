@@ -24,7 +24,7 @@ class OrderTest {
         );
 
         //when
-        Order order = new Order(products, LocalDateTime.now());
+        Order order = Order.create(products, LocalDateTime.now());
 
         //then
         assertThat(order.getTotalPrice()).isEqualTo(3000);
@@ -40,7 +40,7 @@ class OrderTest {
         );
 
         //when
-        Order order = new Order(products, LocalDateTime.now());
+        Order order = Order.create(products, LocalDateTime.now());
 
         //then
         assertThat(order.getOrderStatus()).isEqualByComparingTo(INIT);
@@ -57,7 +57,7 @@ class OrderTest {
         );
 
         //when
-        Order order = new Order(products, registeredDateTime);
+        Order order = Order.create(products, registeredDateTime);
 
         //then
         assertThat(order.getRegisteredDateTime()).isEqualTo(registeredDateTime);
