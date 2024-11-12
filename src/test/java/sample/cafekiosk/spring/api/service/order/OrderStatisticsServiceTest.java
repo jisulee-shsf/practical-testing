@@ -5,6 +5,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import sample.cafekiosk.spring.client.mail.MailSendClient;
 import sample.cafekiosk.spring.domain.history.mail.MailSendHistory;
 import sample.cafekiosk.spring.domain.history.mail.MailSendHistoryRepository;
 import sample.cafekiosk.spring.domain.order.Order;
@@ -19,6 +21,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static sample.cafekiosk.spring.domain.order.OrderStatus.PAYMENT_COMPLETED;
 import static sample.cafekiosk.spring.domain.product.ProductSellingStatus.SELLING;
 import static sample.cafekiosk.spring.domain.product.ProductType.HANDMADE;
@@ -40,6 +44,9 @@ class OrderStatisticsServiceTest {
 
     @Autowired
     MailSendHistoryRepository mailSendHistoryRepository;
+
+    @MockBean
+    MailSendClient mailSendClient;
 
     @AfterEach
     void tearDown() {
@@ -66,6 +73,10 @@ class OrderStatisticsServiceTest {
         Order order3 = createPaymentCompletedOrder(LocalDateTime.of(2024, 11, 12, 23, 59, 59), products);
         Order order4 = createPaymentCompletedOrder(LocalDateTime.of(2024, 11, 13, 0, 0), products);
 
+        //stubbing
+        when(mailSendClient.sendEmail(any(String.class), any(String.class), any(String.class), any(String.class)))
+                .thenReturn(true);
+
         //when
         boolean result = orderStatisticsService.sendOrderStatisticsMail(LocalDate.of(2024, 11, 12), "test@test.com");
 
@@ -75,7 +86,7 @@ class OrderStatisticsServiceTest {
         List<MailSendHistory> histories = mailSendHistoryRepository.findAll();
         assertThat(histories).hasSize(1)
                 .extracting("content")
-                .containsExactlyInAnyOrder("총 매출 합계는 18000원입니다.");
+                .containsExactlyInAnyOrder("총 매출 합계는 12000원입니다.");
     }
 
     private Product createProduct(String productNumber, ProductType type, int price) {

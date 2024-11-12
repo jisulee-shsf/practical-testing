@@ -37,12 +37,12 @@ public class OrderStatisticsService {
                 "no-reply@test.com",
                 email,
                 format("[매출 통계] %s", orderDate),
-                format("총 매출 합계는 %s원 입니다.", totalAmount)
+                format("총 매출 합계는 %s원입니다.", totalAmount)
         );
 
         if (!result) {
             throw new IllegalArgumentException("매출 통계 메일 전송에 실패했습니다.");
         }
-        return false;
+        return true;
     }
 }
